@@ -105,14 +105,13 @@
                         });
                     });
                 }
-                     
             }
             function sendIMMessage(destId, message){
                  if(message.trim() != ""){
                      imClient.sendMessage(destId, message);
                      if(message != '$Ack_Accept'){
                      $('#'+destId).contents().find('[id="chat-messages"]').append('<li class="bubbledLeft">'+message+'</li>');
-                     $('#'+destId).contents().find('[id="chat-messages"]').append('<li class="textLeft" style="float : right; font-size : 10px; list-style : none;">'+getHeure(new Date())+'</li>');
+                     $('#'+destId).contents().find('[id="chat-messages"]').append('<li class="textLeft" style="float : right; font-size : 10px; list-style : none; display : none;">'+getHeure(new Date())+'</li>');
                      $('#'+destId).contents().find('[id="chat-messages"]').
                      animate({scrollTop: $('#'+destId).contents().find('[id="chat-messages"]')[0].scrollHeight},2000);
                      }
@@ -121,7 +120,6 @@
                 lastUsers.push(destId); 
             }
             function receiveIMMessageHandler(e){
-                //$('#'+e.detail.senderId).attr('src', 'plugin-front-1.html');
                 startIM(e.detail.senderId); 
                 $('#'+e.detail.senderId).load(function(){
                     if( $('#'+e.detail.senderId).contents().find('[id="chat-plus-back"]').css('display') == 'none')
@@ -130,7 +128,7 @@
                         $('#'+e.detail.senderId).contents().find('[id="foot-back"]').css({'display' : 'none'});      
                 });
                          var element = '<li class="bubbledRight" >'+e.detail.message+'</li>'+                
-                            '<span class="textRight" style="float : left; font-size : 10px; list-style : none;">'+
+                            '<span class="textRight" style="float : left; font-size : 10px; list-style : none; display : none;">'+
                                             getHeure(e.detail.time)+'</span>';
                           if (e.detail.message !='null' && e.detail.message !='$Ack_Accept'){        
                               $('#'+e.detail.senderId).contents().find('[id="chat-messages"]').append(element);
@@ -241,11 +239,13 @@
                 ion.sound.play('hangup');
             }
              function incomingCallHandler(e) {
-                $("#hangup").attr("disabled", true).val("Hangup");
+                $("#hangup").attr("disabled", true).val("Raccrocher");
                  $('#menu').show('explode');
                 $("#accept").attr("disabled", false).val("Accepter");
                 $("#refuse").attr("disabled", false).val("Refuser");
-                ion.sound.play("iphone");                       
+                 if(e.detail.callType == 'media' ){
+                   ion.sound.play("iphone");      
+               }
                 addHangupButton(e.detail.callId);
         //Accept-Refuse
                 incomingCallId = e.detail.callId;
@@ -254,8 +254,12 @@
                      callType = e.detail.callType;
                      $('#audio').css({'display': 'block'});
                      $('#hangup-audio').css({'display': 'none'});
-                      // webRTCClient.addStreamInDiv(e.detail.stream, e.detail.callType, "audio", 'audioElt-' + e.detail.callId,
-                        //       {width : "640px", height : "480px"}, true);
+                 }
+                 if(e.detail.callType == 'screenSharing'){
+                     $("#hangup").attr('disabled', false).val('Arrêter le partage');
+                     $('#accept').css({'display' : 'none'});
+                     $('#refuse').css({'display' : 'none'});
+                     $('#menu').show('explode');
                  }
             }
              function userMediaSuccessHandler(e) {
@@ -287,6 +291,10 @@
             
             /*
             */
+            
+            function desktopCaptureHandler(e) {
+                    console.log("e.detail.event :" + e.detail.event);
+            }
             function sessionReadyHandler(e){
                  apiRTC.addEventListener("updatePresence", receiveInfo);
                  apiRTC.addEventListener("receiveIMMessage", receiveIMMessageHandler);
@@ -295,7 +303,7 @@
                 apiRTC.addEventListener("userMediaError", userMediaErrorHandler);
                 apiRTC.addEventListener("hangup", hangupHandler);
                 apiRTC.addEventListener("remoteStreamAdded", remoteStreamAddedHandler);
-                //apiRTC.addEventListener("callEstablished", callEstablishedHandler);
+                apiRTC.addEventListener("desktopCapture", desktopCaptureHandler);
 
                  imClient = apiCC.session.createIMClient();
                     webRTCClient = apiRTC.session.createWebRTCClient({
@@ -307,11 +315,14 @@
             //Accept-Refuse
                 webRTCClient.setUserAcceptOnIncomingCall(true);
 
+            //ScreenSharing Activation
+                webRTCClient.activateScreenSharing();
                 $("#hangup").click(function () {
                     webRTCClient.hangUp();
                     ion.sound.stop("iphone"); 
                     ion.sound.stop('skype');
                     $('#menu').css({'display' : 'none'});
+                    $('#timer').timer('remove');
                     $('#audio').css({'display': 'none'});
                 });
                 $("#accept").click(function () {
@@ -346,21 +357,20 @@
                      var el = e.target;
                      var id = el.innerHTML;
                      startIM(el.innerHTML);
-                     $('#'+id).load( function(){
+                    $('#'+id).load( function(){
                          $('#'+id).contents().find('[id="contact"]').html('<i class="fa fa-circle" aria-hidden="true" style ="color : green; font-size:12px;"><em> en ligne</em></i>');
                          $('#'+id).contents().find('[id="visitorId"]').html('<td class="btn btn-success">'+id+'</td>');
                          $('#'+id).contents().find('[id="date"]').css({'display' : 'block'});
                          $('#'+id).contents().find('[id="date"]').html(date);
-                         $('#'+id).contents().find('[id="video-call"]').click(function(){
+                         $('#'+id).contents().find('[id="video-call"]').on('click', function(){
                              $("#hangup").attr("disabled", false).val("Raccrocher");
-                             $('#'+id).contents().find('[id="video-call"]').unbind('click');
+                             $('#'+id).contents().find('[id="video-call"]').attr('disabled', true);
                              var callId = webRTCClient.call(id);
                              if (callId != null) {
                                  addHangupButton(callId);
                              }
                              $('#menu').show('explode'); //size, puff
                              ion.sound.play('skype');
-                               //$('#hangup').attr('disabled', false);
                          });
                           $('#'+id).contents().find('[id="audio-call"]').click(function(){
                               $('#'+id).contents().find('[id="audio-call"]').unbind('click');
@@ -373,14 +383,37 @@
                               $('#audio').css({'display' : 'block'});
                               ion.sound.play('skype');
                          });
-                     });                     
-                     lastDest.push(el.innerHTML);      
+                        $('#'+id).contents().find('[id="screenSharing"]').click( function(){
+                             $('#accept').css({'display' : 'none'});
+                             $('#refuse').css({'display' : 'none'});
+                             $("#hangup").attr("disabled", false).val('Arrêter le partage');
+                            $('#menu').show('explode');
+                             var callId = webRTCClient.shareScreen(id);
+                             if (callId != null) {
+                                 addHangupButton(callId);
+                             }
+                        });
+                        
+                         $('#'+id).contents().find('[id="remove"]').click( function(){
+                             var index = lastDest.indexOf(id);
+                             lastDest.splice(index,1);
+                             $('#'+id).remove();
+                         })
+                         $('#'+id).contents().find('[id="chat-messages"]').mouseenter(function(){
+                             $('#'+id).contents().find('[class="textLeft"]').show('Scale');
+                             $('#'+id).contents().find('[class="textRight"]').show('Scale');
+                         });
+                         $('#'+id).contents().find('[id="chat-messages"]').mouseleave(function(){
+                             $('#'+id).contents().find('[class="textLeft"]').hide('Scale');
+                             $('#'+id).contents().find('[class="textRight"]').hide('Scale');
+                         });
+                     });                      
                  });
             }
              apiRTC.init({
                  apiKey :'badedb11c75abb4a254d0f268452bf48',
-                 presenceGroup : 'A', ///A
-                 subscribeToPresenceGroup  : 'V',  //V
+                 presenceGroup : 'A',
+                 subscribeToPresenceGroup  : 'V',
                  nickname : 'Admin', 
                  onReady : sessionReadyHandler,
              });
