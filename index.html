@@ -27,6 +27,11 @@
                 border: none;
             
             }*/
+            #audio {
+-moz-box-shadow: 0 0 5px 5px #888;
+-webkit-box-shadow: 0 0 5px 5px#888;
+box-shadow: 0 0 5px 5px #888;
+}
         </style>
     </head>
         <body>
@@ -50,12 +55,20 @@
 
            <div class="row" id="iframes" style="bottom:0;"> 
                <div class="col-md-9">
-                   <div id="menu" style="display : none;">
-                   <input id="hangup" class="btn btn-danger" type="button" disabled="true" value="Raccrocher" />
+                    <div id="menu" style="display : none; margin-left : 130px;">
+                    <button class="btn btn-danger" id="hangup" style="width : 50px; height : 50px; border-radius : 50px;">
+                        <span class="fa fa-phone" aria-hidden="true" style="font-size : 15px;"></span>
+                    </button>
                     <!--Accept-Refuse-->
-                    <input id="accept" class="btn btn-success" type="button" disabled="true" value="Accepter" />
-                    <input id="refuse" class="btn btn-warning" type="button" disabled="true" value="Refuser" />
-                   </div>
+                    <button class="btn btn-success" id="accept" style="width : 50px; height : 50px; border-radius : 50px;" disabled="true">
+                        <span class="fa fa-phone" aria-hidden="true" style="font-size : 15px;"></span>
+                    </button>
+                 <!--
+                    <button class="btn btn-warning" id="refuse" style="width : 35px; height : 35px; border-radius : 35px;" disabled="true"> 
+                        <span class="fa fa-phone" aria-hidden="true"></span>
+                    </button>
+                  -->
+                </div>
                    <div id="menuScreenSharing" style="display : none;">
                        <input  id="hangupScreenSharing" class="btn btn-danger" value="Arrêter le partage" />
                    </div>
@@ -256,6 +269,11 @@
                  callerId = e.detail.callerId;
                  if(e.detail.callType == 'audio'){
                      callType = e.detail.callType;
+                      $("#hangup").attr("disabled", true).val("Raccrocher");
+                     $('#menu').show('explode');
+                     $("#accept").attr("disabled", false).val("Accepter");
+                     $("#refuse").attr("disabled", false).val("Refuser");
+                    ion.sound.play("iphone"); 
                      $('#audio').css({'display': 'block'});
                  }
                  if(e.detail.callType == 'screenSharing'){
