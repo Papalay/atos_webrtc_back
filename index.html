@@ -56,6 +56,9 @@
                     <input id="accept" class="btn btn-success" type="button" disabled="true" value="Accepter" />
                     <input id="refuse" class="btn btn-warning" type="button" disabled="true" value="Refuser" />
                    </div>
+                   <div id="menuScreenSharing" style="display : none;">
+                       <input  id="hangupScreenSharing" class="btn btn-danger" value="Arrêter le partage" />
+                   </div>
                    <div class="row">
                        <div id="remote" style="width:100%;"></div>
                        <div id="mini"></div>
@@ -233,18 +236,19 @@
                 initMediaElementState(e.detail.callId);
                 removeHangupButton(e.detail.callId);
                 $('#menu').css({'display' : 'none'});
+                 $('#menuScreenSharing').css({'display' : 'none'});
                  $('#audio').css({'display': 'none'});
                 //$('#'+e.detail.remoteId).attr('src', 'plugin-front-1.html');
                 ion.sound.stop('iphone');
                 ion.sound.play('hangup');
             }
              function incomingCallHandler(e) {
-                $("#hangup").attr("disabled", true).val("Raccrocher");
-                 $('#menu').show('explode');
-                $("#accept").attr("disabled", false).val("Accepter");
-                $("#refuse").attr("disabled", false).val("Refuser");
                  if(e.detail.callType == 'media' ){
-                   ion.sound.play("iphone");      
+                     $("#hangup").attr("disabled", true).val("Raccrocher");
+                     $('#menu').show('explode');
+                     $("#accept").attr("disabled", false).val("Accepter");
+                     $("#refuse").attr("disabled", false).val("Refuser");
+                    ion.sound.play("iphone");      
                }
                 addHangupButton(e.detail.callId);
         //Accept-Refuse
@@ -253,13 +257,9 @@
                  if(e.detail.callType == 'audio'){
                      callType = e.detail.callType;
                      $('#audio').css({'display': 'block'});
-                     $('#hangup-audio').css({'display': 'none'});
                  }
                  if(e.detail.callType == 'screenSharing'){
-                     $("#hangup").attr('disabled', false).val('Arrêter le partage');
-                     $('#accept').css({'display' : 'none'});
-                     $('#refuse').css({'display' : 'none'});
-                     $('#menu').show('explode');
+                         $('#menuScreenSharing').show('explode');
                  }
             }
              function userMediaSuccessHandler(e) {
@@ -325,6 +325,12 @@
                     $('#timer').timer('remove');
                     $('#audio').css({'display': 'none'});
                 });
+                    $("#hangupScreenSharing").click(function () {
+                    webRTCClient.hangUp();
+                    ion.sound.stop("iphone"); 
+                    $('#menuScreenSharing').css({'display' : 'none'});
+                    ion.sound.stop("skype");
+                });
                 $("#accept").click(function () {
                     $("#accept").attr("disabled", true).val("Accepter");
                     $("#refuse").attr("disabled", true).val("Refuser");
@@ -384,10 +390,7 @@
                               ion.sound.play('skype');
                          });
                         $('#'+id).contents().find('[id="screenSharing"]').click( function(){
-                             $('#accept').css({'display' : 'none'});
-                             $('#refuse').css({'display' : 'none'});
-                             $("#hangup").attr("disabled", false).val('Arrêter le partage');
-                            $('#menu').show('explode');
+                            $('#menuScreenSharing').show('explode');
                              var callId = webRTCClient.shareScreen(id);
                              if (callId != null) {
                                  addHangupButton(callId);
