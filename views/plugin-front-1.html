@@ -164,11 +164,13 @@
       <script src="//cloud.apizee.com/apiRTC/apiRTC-latest.min.js"></script>
       <link rel="stylesheet" href="../css/bootstrap.css">
        <link rel="stylesheet" href="../css/font-awesome-animation.min.css">
+       <link rel="stylesheet" href="../css/perfect-scrollbar.css">
       <script src="../angular-1.5.x/angular.min.js"></script>
       <script src="../node_modules/angular-route/angular-route.min.js"></script>
       <script src="../js/angular-ui-router.min.js"></script>
       <script src="../js/controller.js"></script>
        <script src="../js/ion.sound.js"></script>
+        
     </head>
     <body onunload = ""> 
         <div class="container" id="chatbox" ng-controller = "loginCtrl" style="margin-bottom : 0px;">
@@ -199,7 +201,7 @@
                     <div class="row"  id="chat-body" style="">
                         <div class="messages"  style="border-bottom : solid 1px;">
                             <p id="date" style="display : none; text-align : center; font-size : 10px;"></p>
-                            <ul id="chat-messages" style=""  class="commentArea"></ul>
+                            <ul id="chat-messages" style=""  class="commentArea default-skin"></ul>
                         </div>
                         <div class="row" id="chat-footer"  style="margin-bottom : 0px;">
                             <div class="col-xs-10" style="margin-left : 5px;">
@@ -231,6 +233,7 @@
         <script src="../js/jquery-ui.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
         <script src="../js/script.js" ></script>
+<script src="../js/perfect-scrollbar.jquery.js"></script>
         <script type="text/javascript">
             $(document).ready( function (){
                
@@ -261,7 +264,14 @@
                      $('.textLeft').hide('Scale');
                      $('.textRight').hide('Scale');
                 })
-             });
+               /*
+               $('.commentArea').perfectScrollbar();
+                //$('#chat-messages').perfectScrollbar('update');
+                // $('#chat-messages').customScrollbar({
+                   //  'hScroll' : false;
+                 //});
+                 */
+              });            
         </script>
  </body>
 </html>
