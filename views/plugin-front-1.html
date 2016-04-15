@@ -161,9 +161,9 @@
    
     </style>
        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-     <script src="//cloud.apizee.com/libs/jquery-1.9.0.min.js"></script>
       <script src="//cloud.apizee.com/apiRTC/apiRTC-latest.min.js"></script>
       <link rel="stylesheet" href="../css/bootstrap.css">
+       <link rel="stylesheet" href="../css/font-awesome-animation.min.css">
       <script src="../angular-1.5.x/angular.min.js"></script>
       <script src="../node_modules/angular-route/angular-route.min.js"></script>
       <script src="../js/angular-ui-router.min.js"></script>
@@ -181,19 +181,19 @@
                         </div>
                     </div>
                    <div class="row thumbnail shadow-depth-4" id="chat-head" style="margin-bottom : 0px;">
-                        <button class="btn icon" href="#" style="background : #fafcfe;"><span class= "glyphicon glyphicon-earphone media-icon " id="audio-call"></span></button>        
+                        <button class="btn icon" href="#" style="background : #fafcfe;"><span class= "glyphicon glyphicon-earphone media-icon " id="audio-call" title="Appel audio"></span></button>        
                         <button class="btn icon" id="video-call" style="background : #fafcfe;">
-                            <span class="glyphicon glyphicon-facetime-video media-icon"></span>
+                            <span class="glyphicon glyphicon-facetime-video media-icon" title="Appel video"></span>
                         </button> 
                        <button class="btn icon" href="" id="screenSharing" style="background : #fafcfe;">
-                           <span class="fa fa-desktop" aria-hidden="true"></span>
+                           <span class="fa fa-desktop" aria-hidden="true" title="Partage d'écran"></span>
                         </button>
                         <span class="col-xs-1"  id="chat-icon" style="display : none;">
                             <i class="fa fa-weixin" aria-hidden="true"   style="color : orange;"></i>
                         </span>
                         <div class="col-xs-2 pull-right">
-                            <a href="#" id="remove" ><span class=" glyphicon glyphicon-remove-sign"></span></a>
-                            <a href="#" id="minus"><span class="glyphicon glyphicon-minus" ></span></a>
+                            <a href="#" id="remove" title="Fermer"><span class=" glyphicon glyphicon-remove-sign"></span></a>
+                            <a href="#" id="minus" title="Réduire"><span class="glyphicon glyphicon-minus" ></span></a>
                         </div>
                     </div>
                     <div class="row"  id="chat-body" style="">
@@ -202,10 +202,14 @@
                             <ul id="chat-messages" style=""  class="commentArea"></ul>
                         </div>
                         <div class="row" id="chat-footer"  style="margin-bottom : 0px;">
-                            <div class="col-md-10" style="margin-left : 5px;">
+                            <div class="col-xs-10" style="margin-left : 5px;">
                                 <textarea class="form-control" rows="1" style="resize : none ;font-size : 12px;" placeholder="Tapez votre message ici"
                               id="text-input"></textarea>
                             </div>
+                             <div id="tipping-notif" style="visibility : hidden;">
+                                <i class="fa fa-circle-o faa-burst animated " style="background-color : white;"></i>
+                            </div>
+                           
                         </div>
                     </div>
                 </div>

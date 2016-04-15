@@ -4,7 +4,6 @@
         <meta charset="utf-8">
          <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
-      <script src="//cloud.apizee.com/libs/jquery-1.9.0.min.js"></script>
       <script src="//cloud.apizee.com/apiRTC/apiRTC-latest.min.js"></script>
       <!--<script src="../angular-1.5.x/angular.min.js"></script> -->
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
@@ -125,13 +124,12 @@ box-shadow: 0 0 5px 5px #888;
             function sendIMMessage(destId, message){
                  if(message.trim() != ""){
                      imClient.sendMessage(destId, message);
-                     if(message != '$Ack_Accept'){
+                     if(message != '$Ack_Accept' && message !='//Writing\\_'){
                      $('#'+destId).contents().find('[id="chat-messages"]').append('<li class="bubbledLeft">'+message+'</li>');
                      $('#'+destId).contents().find('[id="chat-messages"]').append('<li class="textLeft" style="float : right; font-size : 10px; list-style : none; display : none;">'+getHeure(new Date())+'</li>');
                      $('#'+destId).contents().find('[id="chat-messages"]').
                      animate({scrollTop: $('#'+destId).contents().find('[id="chat-messages"]')[0].scrollHeight},2000);
                      }
-                    
                  }
                 lastUsers.push(destId); 
             }
@@ -146,7 +144,8 @@ box-shadow: 0 0 5px 5px #888;
                          var element = '<li class="bubbledRight" >'+e.detail.message+'</li>'+                
                             '<span class="textRight" style="float : left; font-size : 10px; list-style : none; display : none;">'+
                                             getHeure(e.detail.time)+'</span>';
-                          if (e.detail.message !='null' && e.detail.message !='$Ack_Accept'){        
+                          if (e.detail.message !='null' && e.detail.message !='$Ack_Accept' && e.detail.message != '//Writing\\_'){ 
+                              $('#'+e.detail.senderId).contents().find('[id="tipping-notif"]').css({'visibility' : 'hidden'});
                               $('#'+e.detail.senderId).contents().find('[id="chat-messages"]').append(element);
                               ion.sound.play("facebook");
                               $('#'+e.detail.senderId).contents().find('[id="chat-icon"]').css({'display': 'block'});
@@ -157,7 +156,10 @@ box-shadow: 0 0 5px 5px #888;
                               ion.sound.stop('skype');
                               $('#call-going').css({'display' : 'none'});
                               $('#timer').timer();
+                          } else if( e.detail.message == '//Writing\\_'){
+                              $('#'+e.detail.senderId).contents().find('[id="tipping-notif"]').css({'visibility' : 'visible'});
                           }
+                
                 
             }
             function receiveInfo(e){
@@ -380,7 +382,7 @@ box-shadow: 0 0 5px 5px #888;
                 $(document).on('click', '.visitor', function(e){
                      var el = e.target;
                      var id = el.innerHTML;
-                     startIM(el.innerHTML);
+                     startIM(el.innerHTML);                       
                     $('#'+id).load( function(){
                          $('#'+id).contents().find('[id="contact"]').html('<i class="fa fa-circle" aria-hidden="true" style ="color : green; font-size:12px;"><em> en ligne</em></i>');
                          $('#'+id).contents().find('[id="visitorId"]').html('<td class="btn btn-success">'+id+'</td>');
@@ -427,9 +429,8 @@ box-shadow: 0 0 5px 5px #888;
                          $('#'+id).contents().find('[id="chat-messages"]').mouseleave(function(){
                              $('#'+id).contents().find('[class="textLeft"]').hide('Scale');
                              $('#'+id).contents().find('[class="textRight"]').hide('Scale');
-                         });
-                     });                      
-                 });
+                         })
+                     });
             }
              apiRTC.init({
                  apiKey :'badedb11c75abb4a254d0f268452bf48',
