@@ -4,11 +4,11 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
       .state('home', {
         url: '/home',
         controller: 'HomeCtrl',
-        templateUrl: 'partials/home.html'
+        templateUrl: 'views/home.html'
       })
       .state('login', {
         url: '/login',
-        templateUrl: 'partials/login.html',
+        templateUrl: 'views/login.html',
         controller: 'LoginCtrl',
         resolve: {
           skipIfLoggedIn: skipIfLoggedIn
@@ -16,7 +16,7 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
       })
       .state('signup', {
         url: '/signup',
-        templateUrl: 'partials/signup.html',
+        templateUrl: 'views/signup.html',
         controller: 'SignupCtrl',
         resolve: {
           skipIfLoggedIn: skipIfLoggedIn
@@ -26,14 +26,6 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
         url: '/logout',
         template: null,
         controller: 'LogoutCtrl'
-      })
-      .state('profile', {
-        url: '/profile',
-        templateUrl: 'partials/profile.html',
-        controller: 'ProfileCtrl',
-        resolve: {
-          loginRequired: loginRequired
-        }
       });
 
     $urlRouterProvider.otherwise('/');
