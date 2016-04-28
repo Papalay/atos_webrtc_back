@@ -5,7 +5,8 @@ var connexion = angular.module('connexion', ['ui.router']);
 connexion.controller('loginCtrl', ['$scope', '$state','$window', 'myService', function($scope, $state, $window, myService){
     var users = [
                 {'login' :'webrtc',
-                'password' : 'atos'
+                'password' : 'atos',
+                 'image' : '../images/image-1.jpeg'
                 }
   ];
  $scope.connexion = function(){
@@ -19,8 +20,10 @@ connexion.controller('loginCtrl', ['$scope', '$state','$window', 'myService', fu
                 $state.go('home'); 
             }
         }                 
+ }  
  }
-}]);
+]);
+
 //Router : ...
 connexion.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider){
     $stateProvider
