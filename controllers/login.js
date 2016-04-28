@@ -5,7 +5,6 @@ angular.module('MyApp')
           .then(function() {
          toastr.success('You have successfully signed in with ' + provider + '!');
           //$location.path('/');
-         $state.go('home');
         })
         .catch(function(error) {
           if (error.error) {
