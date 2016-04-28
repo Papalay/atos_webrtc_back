@@ -36,7 +36,8 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
 
     $authProvider.google({
         url : '/auth/google',
-        redirectUri : 'http://webrtcback.herokuapp.com/home',
+       // redirectUri : 'http://webrtcback.herokuapp.com/home',
+         redirectUri: window.location.origin || window.location.protocol + '//' + window.location.host,
         clientId: '293876046234-5pqvvnu5a8nof25jf60jsq3rhqf6kkbq.apps.googleusercontent.com',
         display: 'popup',
         type: '2.0',
