@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.router', 'satellizer'])
+angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.router', 'satellizer', 'ngCookies'])
   .config(function($stateProvider, $urlRouterProvider, $authProvider) {
     $stateProvider
       .state('home', {
@@ -14,21 +14,14 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
           skipIfLoggedIn: skipIfLoggedIn
         }
       })
-      .state('signup', {
-        url: '/signup',
-        templateUrl: 'views/signup.html',
-        controller: 'SignupCtrl',
-        resolve: {
-          skipIfLoggedIn: skipIfLoggedIn
-        }
-      })
       .state('logout', {
         url: '/logout',
-        template: null,
+        templateUrl: '/views/login.html',
         controller: 'LogoutCtrl'
       });
 
     $urlRouterProvider.otherwise('/');
+    $authProvider.loginUrl = '/login';
 
     $authProvider.facebook({
       clientId: '657854390977827'
@@ -37,7 +30,7 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
     $authProvider.google({
         url : '/auth/google',
        // redirectUri : 'http://webrtcback.herokuapp.com/home',
-         redirectUri: window.location.origin+'/home' || window.location.protocol + '//' + window.location.host+'/home',
+        redirectUri: window.location.origin+'/home' || window.location.protocol + '//' + window.location.host+'/home',
         clientId: '293876046234-5pqvvnu5a8nof25jf60jsq3rhqf6kkbq.apps.googleusercontent.com',
         display: 'popup',
         type: '2.0',

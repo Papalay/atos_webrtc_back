@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
     <head>
-        <title>WebRTC Atos | Back</title>
         <meta charset="utf-8">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -10,29 +9,20 @@
         <link rel="stylesheet" href="assets/css/font-awesome.min.css">
         <link rel="stylesheet" href="assets/css/docs.css">
         <link rel="stylesheet" href="assets/js/google-code-prettify/prettify.css">
-        <script src="js/ion.sound.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/script.js"></script>
-        <script src="js/jquery-ui.min.js"></script>
-        <script src="js/timer.jquery.js"></script>
+    
+        <script src="../js/jquery-2.2.0.min.js"></script>
+        <script src="../js/jquery-ui.min.js"></script>
+        <script src="../js/ion.sound.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/script.js"></script>
+        <script src="../js/timer.jquery.js"></script>
         <style>
-            #audio {
-                -moz-box-shadow: 0 0 5px 5px #888;
-                -webkit-box-shadow: 0 0 5px 5px#888;
-                box-shadow: 0 0 5px 5px #888;2
-            }
+            #audio{-moz-box-shadow:0 0 5px 5px #888;-webkit-box-shadow:0 0 5px 5px#888;box-shadow:0 0 5px 5px #888}
         </style>
     </head>
         <body>
        <div class="container" style="position : relative;">
-           <div style="visibility : hidden;">
-           <legend>Login page</legend>
-           <div class="col-md-8">
-             <label for="name">User :</label>
-               <span id="login">{{user.login}}</span>
-           </div>
-           </div>
-           <div class="col-md-4" id="visitor-layout">
+           <div class="col-md-4 col-md-offset-8" id="visitor-layout">
                <table class="table table-bordered table-striped table-condensed" style="">  
                    <thead class="bg-primary">     
                        <tr><th>Visiteurs</th></tr>            
@@ -47,7 +37,6 @@
                     <button class="btn btn-danger" id="hangup" style="width : 50px; height : 50px; border-radius : 50px;">
                         <span class="fa fa-phone" aria-hidden="true" style="font-size : 15px;"></span>
                     </button>
-                    <!--Accept-Refuse-->
                     <button class="btn btn-success" id="accept" style="width : 50px; height : 50px; border-radius : 50px;" disabled="true">
                         <span class="fa fa-phone" aria-hidden="true" style="font-size : 15px;"></span>
                     </button>
@@ -64,7 +53,6 @@
             </div>
            </div>        
         </div>
-      
         <script type="text/javascript">
              'use strict';
         
@@ -102,7 +90,7 @@
             function sendIMMessage(destId, message){
                  if(message.trim() != ""){
                      imClient.sendMessage(destId, message);
-                     if(message != '$Ack_Accept' && message !='//Writing\\_'){
+                     if(message != '$Ack_Accept'){
                      $('#'+destId).contents().find('[id="chat-messages"]').append('<li class="bubbledLeft">'+message+'</li>');
                      $('#'+destId).contents().find('[id="chat-messages"]').append('<li class="textLeft" style="float : right; font-size : 10px; list-style : none; display : none;">'+getHeure(new Date())+'</li>');
                      $('#'+destId).contents().find('[id="chat-messages"]').
@@ -118,40 +106,36 @@
                         $('#'+e.detail.senderId).contents().find('[id="chat-plus-back"]').css({'display': 'block'});    
                     if( $('#'+e.detail.senderId).contents().find('[id="foot-back"]').css('display') =='block' )
                         $('#'+e.detail.senderId).contents().find('[id="foot-back"]').css({'display' : 'none'});      
-                });
-                         var element = '<li class="bubbledRight" >'+e.detail.message+'</li>'+                
-                            '<span class="textRight" style="float : left; font-size : 10px; list-style : none; display : none;">'+
-                                            getHeure(e.detail.time)+'</span>';
-                          if (e.detail.message !='null' && e.detail.message !='$Ack_Accept' && e.detail.message != '//Writing\\_'){ 
-                              $('#'+e.detail.senderId).contents().find('[id="tipping-notif"]').css({'visibility' : 'hidden'});
-                              $('#'+e.detail.senderId).contents().find('[id="chat-messages"]').append(element);
-                              ion.sound.play("facebook");
-                              $('#'+e.detail.senderId).contents().find('[id="chat-icon"]').css({'display': 'block'});
-                              $('#'+e.detail.senderId).contents().find('[id="chat-messages"]').
-                              animate({scrollTop: $('#'+e.detail.senderId).contents().find('[id="chat-messages"]')[0].scrollHeight},2000); 
-                              $('#'+e.detail.senderId).contents().find('[id="chat"]').css({'visibility' : 'visible'});
-                          }else if( e.detail.message == '$Ack_Accept'){
-                              ion.sound.stop('skype');
-                              $('#call-going').css({'display' : 'none'});
-                              $('#timer').timer();
-                          } else if( e.detail.message == '//Writing\\_'){
-                              $('#'+e.detail.senderId).contents().find('[id="tipping-notif"]').css({'visibility' : 'visible'});
-                          }
-                
-                
+                });       
+                var element = '<li class="bubbledRight" >'+e.detail.message+'</li>'+                        
+                    '<span class="textRight" style="float : left; font-size : 10px; list-style : none; display : none;">'+
+                    getHeure(e.detail.time)+'</span>';
+                if (e.detail.message !='null' && e.detail.message !='$Ack_Accept'){ 
+                    $('#'+e.detail.senderId).contents().find('[id="tipping-notif"]').css({'visibility' : 'hidden'});
+                    $('#'+e.detail.senderId).contents().find('[id="chat-messages"]').append(element);
+                    ion.sound.play("facebook");
+                    $('#'+e.detail.senderId).contents().find('[id="chat-icon"]').css({'display': 'block'});
+                    $('#'+e.detail.senderId).contents().find('[id="chat-messages"]').
+                    animate({scrollTop: $('#'+e.detail.senderId).contents().find('[id="chat-messages"]')[0].scrollHeight},2000); 
+                    $('#'+e.detail.senderId).contents().find('[id="chat"]').css({'visibility' : 'visible'});
+                }else if( e.detail.message == '$Ack_Accept'){
+                    ion.sound.stop('skype');
+                    $('#call-going').css({'display' : 'none'});
+                    $('#timer').timer();
+                } 
             }
             function receiveInfo(e){
-                 date =  e.detail.time.getDate()+"/"+(e.detail.time.getMonth()+1)+"/"+e.detail.time.getFullYear();
+                date =  e.detail.time.getDate()+"/"+(e.detail.time.getMonth()+1)+"/"+e.detail.time.getFullYear();
                 $('#date').css({'display' : 'block'});
-                 $('#date').html(date);
-                 listId = e.detail.connectedUsersListWithStatus;
-                 for(var i=0; i<listId.length; i++){                     
-                     if( apiCC.session.apiCCId != listId[i].userId && listId[i].group !='undefined' && listId[i].userId !='undefined'){
-                         if ($.inArray(listId[i].userId, lastUsers)== -1){
-                             lastUsers.push(listId[i].userId);
-                             var el = angular.element(document.querySelector('#visitors'));
-                             el.append('<tr><td class="btn btn-success visitor">'+listId[i].userId+'</td></tr>');
-                         }
+                $('#date').html(date);
+                listId = e.detail.connectedUsersListWithStatus;
+                for(var i=0; i<listId.length; i++){                     
+                    if( apiCC.session.apiCCId != listId[i].userId && listId[i].group !='undefined' && listId[i].userId !='undefined'){
+                        if ($.inArray(listId[i].userId, lastUsers)== -1){
+                            lastUsers.push(listId[i].userId);
+                            var el = angular.element(document.querySelector('#visitors'));
+                            el.append('<tr><td class="btn btn-success visitor">'+listId[i].userId+'</td></tr>');
+                        }
                      }
                  }
              }
@@ -221,43 +205,39 @@
                  ion.sound.stop('skype');
             }
             function userMediaErrorHandler(e) {
-                $("#hangup").attr("disabled", false).val("Raccrocher");
+                $("#hangup").attr("disabled", false);
             }
             function hangupHandler(e) {
                 initMediaElementState(e.detail.callId);
                 removeHangupButton(e.detail.callId);
-                jQuery('#media').dialog('close');
+                $('#media').dialog('close');
                 $('#menu').css({'display' : 'none'});
-                 $('#menuScreenSharing').css({'display' : 'none'});
-                 $('#audio').css({'display': 'none'});
-                //$('#'+e.detail.remoteId).attr('src', 'plugin-front-1.html');
+                $('#menuScreenSharing').css({'display' : 'none'});
+                $('#audio').css({'display': 'none'});
                 ion.sound.stop('iphone');
                 ion.sound.play('hangup');
             }
-             function incomingCallHandler(e) {
-                 jQuery('#media').dialog('open');
-                 if(e.detail.callType == 'media' ){
-                     $("#hangup").attr("disabled", true).val("Raccrocher");
-                     $('#menu').show('explode');
-                     $("#accept").attr("disabled", false).val("Accepter");
-                     $("#refuse").attr("disabled", false).val("Refuser");
-                    ion.sound.play("iphone");      
-               }
+            function incomingCallHandler(e) {
+                $('#media').dialog('open');
                 addHangupButton(e.detail.callId);
-        //Accept-Refuse
                 incomingCallId = e.detail.callId;
-                 callerId = e.detail.callerId;
-                 if(e.detail.callType == 'audio'){
-                     callType = e.detail.callType;
-                      $("#hangup").attr("disabled", true).val("Raccrocher");
-                     $('#menu').show('explode');
-                     $("#accept").attr("disabled", false).val("Accepter");
-                     $("#refuse").attr("disabled", false).val("Refuser");
+                callerId = e.detail.callerId;
+                if(e.detail.callType == 'media' ){
+                    $("#hangup").attr("disabled", true);
+                    $('#menu').show('explode');
+                    $("#accept").attr("disabled", false);
+                    ion.sound.play("iphone");      
+                }
+                if(e.detail.callType == 'audio'){
+                    callType = e.detail.callType;
+                    $("#hangup").attr("disabled", true);
+                    $('#menu').show('explode');
+                    $("#accept").attr("disabled", false);
                     ion.sound.play("iphone"); 
-                     $('#audio').css({'display': 'block'});
+                    $('#audio').css({'display': 'block'});
                  }
                  if(e.detail.callType == 'screenSharing'){
-                         $('#menuScreenSharing').show('explode');
+                     $('#menuScreenSharing').show('explode');
                  }
             }
              function userMediaSuccessHandler(e) {
@@ -294,24 +274,23 @@
                     console.log("e.detail.event :" + e.detail.event);
             }
             function sessionReadyHandler(e){
-                 apiRTC.addEventListener("updatePresence", receiveInfo);
-                 apiRTC.addEventListener("receiveIMMessage", receiveIMMessageHandler);
+                apiRTC.addEventListener("updatePresence", receiveInfo);
+                apiRTC.addEventListener("receiveIMMessage", receiveIMMessageHandler);
                 apiRTC.addEventListener("userMediaSuccess", userMediaSuccessHandler);
-                  apiRTC.addEventListener("incomingCall", incomingCallHandler);
+                apiRTC.addEventListener("incomingCall", incomingCallHandler);
                 apiRTC.addEventListener("userMediaError", userMediaErrorHandler);
                 apiRTC.addEventListener("hangup", hangupHandler);
                 apiRTC.addEventListener("remoteStreamAdded", remoteStreamAddedHandler);
                 apiRTC.addEventListener("desktopCapture", desktopCaptureHandler);
-                 imClient = apiCC.session.createIMClient();
-                    webRTCClient = apiRTC.session.createWebRTCClient({
-                           });
-                 //Multi calls Activation
+                imClient = apiCC.session.createIMClient();
+                webRTCClient = apiRTC.session.createWebRTCClient({});
+                //Multi calls Activation
                 webRTCClient.setAllowMultipleCalls(true);
-            //Bandwitdh limitation
+                //Bandwitdh limitation
                 webRTCClient.setVideoBandwidth(300);
-            //Accept-Refuse
+                //Accept-Refuse
                 webRTCClient.setUserAcceptOnIncomingCall(true);
-            //ScreenSharing Activation
+                //ScreenSharing Activation
                 webRTCClient.activateScreenSharing();
                 $("#hangup").click(function () {
                     webRTCClient.hangUp();
@@ -329,10 +308,10 @@
                     ion.sound.stop("skype");
                 });
                 $("#accept").click(function () {
+                    webRTCClient.acceptCall(incomingCallId);
                     $("#accept").attr("disabled", true);
                     $("#refuse").attr("disabled", true);
-                    $("#hangup").attr("disabled", false);
-                    webRTCClient.acceptCall(incomingCallId);
+                    $("#hangup").attr("disabled", false); 
                     ion.sound.stop("iphone");
                     ion.sound.stop("skype");
                     sendIMMessage(callerId, '$Ack_Accept');
@@ -343,33 +322,33 @@
                     }
                 });
                 $(document).on('click', '.visitor', function(e){
-                     var el = e.target;
-                     var id = el.innerHTML;
+                    var el = e.target;
+                    var id = el.innerHTML;
                     destVisitorId =  id;
-                     startIM(el.innerHTML);  
+                    startIM(el.innerHTML);  
                     $('#'+id).load( function(){
                          $('#'+id).contents().find('[id="contact"]').html('<i class="fa fa-circle" aria-hidden="true" style ="color : green; font-size:12px;"><em> en ligne</em></i>');
                          $('#'+id).contents().find('[id="visitorId"]').html('<td class="btn btn-success">'+id+'</td>');
                          $('#'+id).contents().find('[id="date"]').css({'display' : 'block'});
                          $('#'+id).contents().find('[id="date"]').html(date);
                          $('#'+id).contents().find('[id="video-call"]').on('click', function(){
-                             $('#media').dialog('open')
+                             $('#media').dialog('open');
                              $("#hangup").attr("disabled", false);
                              var callId = webRTCClient.call(id);
                              if (callId != null) {
                                  addHangupButton(callId);
                              }
-                             $('#menu').show('explode'); //size, puff
+                             $('#menu').show('explode');
                              ion.sound.play('skype');
                          });
-                          $('#'+id).contents().find('[id="audio-call"]').click(function(){
-                              var callId = webRTCClient.callAudio(id);
-                              if (callId != null) {
+                        $('#'+id).contents().find('[id="audio-call"]').click(function(){
+                            var callId = webRTCClient.callAudio(id);
+                            if (callId != null) {
                                  addHangupButton(callId);
-                             }
-                              $('#menu').show('explode'); 
-                              $('#audio').css({'display' : 'block'});
-                              ion.sound.play('skype');
+                            }
+                            $('#menu').show('explode'); 
+                            $('#audio').css({'display' : 'block'});
+                            ion.sound.play('skype');
                          });
                         $('#'+id).contents().find('[id="screenSharing"]').click( function(){
                             $('#menuScreenSharing').show('explode');
@@ -392,7 +371,7 @@
                              $('#'+id).contents().find('[class="textRight"]').hide('Scale');
                          })
                      });
-            })}
+            })};
              apiRTC.init({
                  apiKey :'badedb11c75abb4a254d0f268452bf48',
                  presenceGroup : 'A',
@@ -401,7 +380,7 @@
                  onReady : sessionReadyHandler,
              });
               $(document).ready(function(){                        
-                  jQuery('#media').dialog({
+                  $('#media').dialog({
                       autoOpen: false,
                       dialogClass: "success",
                       modal: false,
@@ -410,11 +389,12 @@
                       height: 640,
                       resizable : false,
                       draggable : true,
-                      show: 'blind',
+                      show: {effect : 'blind',  duration: 1000},
                       hide: 'fold',
+                      width:'auto',
                       open: function(){
-                          jQuery('#media').bind('click',function(){
-                              jQuery('#media').close();
+                          $('#media').bind('click',function(){
+                              $('#media').close();
                           })
                       }
                   });     

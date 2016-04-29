@@ -62,11 +62,8 @@ if (app.get('env') === 'production') {
 
 app.get('/', function(req, res){
     res.sendFile('index.html');
-  //res.render('index.html', { user: req.user });
 });
 app.get('/home',function(req, res){
- // res.render('partials/home.html', { user: req.user });
-    //res.sendFile('partials/home.html', { root: __dirname });
     res.redirect('/#/home');
 });
 
@@ -100,7 +97,11 @@ function ensureAuthenticated(req, res, next) {
   req.user = payload.sub;
   next();
 }
-
+  var users = [
+                {'email' :'webrtc@atos.net',
+                'password' : 'atos'
+                }
+  ];
 /*
  |--------------------------------------------------------------------------
  | Generate JSON Web Token
@@ -115,6 +116,26 @@ function createJWT(user) {
   return jwt.encode(payload, config.TOKEN_SECRET);
 }
 
+/*
+ |--------------------------------------------------------------------------
+ | Log in with Email
+ |--------------------------------------------------------------------------
+ */
+var  isAuthenticated = false;
+app.post('/auth', function(req, res) {
+     for ( var i in users ){
+            var user = users[i];
+            if(user.email == req.body.email && user.password == req.body.password){
+                isAuthenticated =  true;
+                res.redirect('/#/home'); 
+            }
+        }res.redirect('/#/login');
+});
+app.get('/auth/login', function(req, res){})
+
+app.get('/auth', function(req, res) {        
+    res.json({'isAuthenticated' : isAuthenticated});
+});
 /*
  |--------------------------------------------------------------------------
  | GET /api/me
@@ -150,19 +171,6 @@ app.put('/api/me', ensureAuthenticated, function(req, res) {
  | Log in with Email
  |--------------------------------------------------------------------------
  */
-app.post('/auth/login', function(req, res) {
-  User.findOne({ email: req.body.email }, '+password', function(err, user) {
-    if (!user) {
-      return res.status(401).send({ message: 'Invalid email and/or password' });
-    }
-    user.comparePassword(req.body.password, function(err, isMatch) {
-      if (!isMatch) {
-        return res.status(401).send({ message: 'Invalid email and/or password' });
-      }
-      res.send({ token: createJWT(user) });
-    });
-  });
-});
 
 /*
  |--------------------------------------------------------------------------
