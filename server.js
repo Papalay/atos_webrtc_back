@@ -97,11 +97,7 @@ function ensureAuthenticated(req, res, next) {
   req.user = payload.sub;
   next();
 }
-  var users = [
-                {'email' :'webrtc@atos.net',
-                'password' : 'atos'
-                }
-  ];
+  
 /*
  |--------------------------------------------------------------------------
  | Generate JSON Web Token
@@ -121,6 +117,11 @@ function createJWT(user) {
  | Log in with Email
  |--------------------------------------------------------------------------
  */
+var users = [
+                {'email' :'webrtc@atos.net',
+                'password' : 'atos'
+                }
+  ];
 var  isAuthenticated = false;
 app.post('/auth', function(req, res) {
      for ( var i in users ){
