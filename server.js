@@ -135,7 +135,7 @@ app.post('/auth', function(req, res) {
 app.get('/auth/login', function(req, res){})
 
 app.get('/auth', function(req, res) {        
-    res.json({'isAuthenticated' : isAuthenticated});
+    res.send(JSON.stringify({'isAuthenticated' : isAuthenticated}));
 });
 /*
  |--------------------------------------------------------------------------
