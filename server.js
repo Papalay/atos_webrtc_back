@@ -128,6 +128,7 @@ app.post('/auth', function(req, res) {
             var user = users[i];
             if(user.email == req.body.email && user.password == req.body.password){
                 isAuthenticated =  true;
+                res.status(200).json({'isAuthenticated' : isAuthenticated});
                  res.redirect('/#/home');
             }
         }res.redirect('/#/login');
@@ -135,7 +136,7 @@ app.post('/auth', function(req, res) {
 app.get('/auth/login', function(req, res){})
 
 app.get('/auth', function(req, res) { 
-     res.status(200).json({'isAuthenticated' : isAuthenticated});
+     //res.status(200).json({'isAuthenticated' : isAuthenticated});
     //res.send(JSON.stringify({'isAuthenticated' : isAuthenticated}));
 });
 /*
