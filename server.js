@@ -139,6 +139,10 @@ app.get('/auth/login', function(req, res){})
 app.get('/login', function(req, res) { 
      //res.status(200).json({'isAuthenticated' : isAuthenticated});
      res.send(JSON.stringify({'isAuthenticated' : isAuthenticated}));
+   // setInterval( function(){
+      //res.redirect('/#/home');    
+  //  }, 5000); 
+    
 });
 /*
  |--------------------------------------------------------------------------
