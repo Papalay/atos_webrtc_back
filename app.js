@@ -29,54 +29,12 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
 
     $authProvider.google({
         url : '/auth/google',
-       // redirectUri : 'http://webrtcback.herokuapp.com/home',
         redirectUri: window.location.origin+'/home' || window.location.protocol + '//' + window.location.host+'/home',
         clientId: '293876046234-5pqvvnu5a8nof25jf60jsq3rhqf6kkbq.apps.googleusercontent.com',
         display: 'popup',
         type: '2.0',
         popupOptions: { width: 452, height: 633 }
     });
-
-    $authProvider.github({
-      clientId: '0ba2600b1dbdb756688b'
-    });
-
-    $authProvider.linkedin({
-      clientId: '77cw786yignpzj'
-    });
-
-    $authProvider.instagram({
-      clientId: '799d1f8ea0e44ac8b70e7f18fcacedd1'
-    });
-
-    $authProvider.yahoo({
-      clientId: 'dj0yJmk9SDVkM2RhNWJSc2ZBJmQ9WVdrOWIzVlFRMWxzTXpZbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD0yYw--'
-    });
-
-    $authProvider.twitter({
-      url: '/auth/twitter'
-    });
-
-    $authProvider.live({
-      clientId: '000000004C12E68D'
-    });
-
-    $authProvider.twitch({
-      clientId: 'qhc3lft06xipnmndydcr3wau939a20z'
-    });
-
-    $authProvider.bitbucket({
-      clientId: '48UepjQDYaZFuMWaDj'
-    });
-
-    $authProvider.oauth2({
-      name: 'foursquare',
-      url: '/auth/foursquare',
-      clientId: 'MTCEJ3NGW2PNNB31WOSBFDSAD4MTHYVAZ1UKIULXZ2CVFC2K',
-      redirectUri: window.location.origin || window.location.protocol + '//' + window.location.host,
-      authorizationEndpoint: 'https://foursquare.com/oauth2/authenticate'
-    });
-
     function skipIfLoggedIn($q, $auth) {
       var deferred = $q.defer();
       if ($auth.isAuthenticated()) {
@@ -86,7 +44,6 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
       }
       return deferred.promise;
     }
-
     function loginRequired($q, $location, $auth) {
       var deferred = $q.defer();
       if ($auth.isAuthenticated()) {

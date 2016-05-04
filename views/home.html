@@ -24,8 +24,8 @@
             .ui-widget.success-dialog{font-family:Verdana,Arial,sans-serif;font-size: .8em}.ui-widget-content.success-dialog{background:#F9F9F9;border:1px solid #90d93f;color:#222}.ui-dialog.success-dialog{left:0;outline:0 none;padding:0 !important;position:absolute;top:0}.ui-dialog.success-dialog .ui-dialog-content{background:none repeat scroll 0 0 transparent;border:0 none;overflow:auto;position:relative;padding:0 !important;margin:0}.ui-dialog.success-dialog .ui-widget-header{background:#fafcfe;border:0;color:#fff;font-weight:normal}.ui-dialog.success-dialog .ui-dialog-titlebar{padding:0.1em .5em;position:relative;font-size:1em}
         </style>
     </head>
-        <body>
-       <div class="container" style="position : relative; margin-top : 13px;">
+    <body>
+        <div class="container" style="position : relative; margin-top : 13px;">
            <div class="col-md-4 col-md-offset-8" id="visitor-layout">
                <table class="table table-bordered table-condensed table-info" style="">  
                    <thead class="bg-primary">     
@@ -50,7 +50,7 @@
                 </div>
                 <div id="remote" style="width:100%;" title="Remote video"></div>
                 <div id="mini"></div>
-                <div id="audio" style="display: none; height:50px; width : 180px;" class="col-xs-4 bg-info fa-border">
+                <div id="audio" style="display: none; height:50px; width : 250px; margin-left : 10px; margin-right : 10px;" class="col-xs-4 bg-info fa-border">
                            <div id="timer"></div>
                            <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom" style="margin-left : 60px;" id="call-going"></i>
                 </div>
@@ -59,7 +59,6 @@
         </div>
         <script type="text/javascript">
              'use strict';
-        
             var session = null,
                 imClient = null,
                 listId = null,
@@ -72,12 +71,13 @@
                 incomingCallId =0,
                 callerId=0,
                 callType="";
-         
+                /*Création d'une fenêtre de discusion intantanée*/
                 function startIM(destId){
                 if($.inArray(destId, lastDest)==-1){
                     lastDest.push(destId); 
                     $('#iframes').append('<iframe src="views/plugin-front-1.html" class="col-md-4 pull-right" scrolling="no"></iframe>');
                     $('#iframes').children().last().attr("id", destId);
+                    $('#'+destId).css({'src' : 'views/plugin-front-1.html'});
                     $('#'+destId).css({'height' : '410px', 'width ': '310', 'position ': 'absolute', 'right': '0px','bottom': '0',
                                       'overflow': 'hidden', 'border' : 'none'});
                     $('#'+destId).load(function(){  
@@ -91,6 +91,7 @@
                     });
                 }
             }
+            /*Envoi d'un message instantané*/
             function sendIMMessage(destId, message){
                  if(message.trim() != ""){
                      imClient.sendMessage(destId, message);
@@ -103,6 +104,7 @@
                  }
                 lastUsers.push(destId); 
             }
+            /*Evénement se déclanchant à la réception d'un message*/
             function receiveIMMessageHandler(e){
                 startIM(e.detail.senderId); 
                 $('#'+e.detail.senderId).load(function(){
@@ -128,6 +130,7 @@
                     $('#timer').timer();
                 } 
             }
+            /*Récéption des visiteurs coonnectés au site*/
             function receiveInfo(e){
                 date =  e.detail.time.getDate()+"/"+(e.detail.time.getMonth()+1)+"/"+e.detail.time.getFullYear();
                 $('#date').css({'display' : 'block'});
@@ -139,16 +142,18 @@
                             lastUsers.push(listId[i].userId);
                             var el = angular.element(document.querySelector('#visitors'));
                             el.append('<tr class="table-danger"><td class="btn btn-success visitor">'+listId[i].userId+'</td></tr>');
-                             alert('Un nouveau visiteur connecté !');
+                             alert('Un nouveau visiteur connecté identifiant = '+listId[i].userId);
                         }
                      }
                  }
              }
+            /*Formattage de l'heure*/
              function getHeure(date){
                  var heures = ("0" +date.getHours()).slice('-2');
                  var minutes = ("0" +date.getMinutes()).slice('-2');
                  return (heures+ ":"+minutes);
              }
+            /*Ajout d'un stream dansun div*/
             function addStreamInDiv(stream, callType, divId, mediaEltId, style, muted) {
                 var mediaElt = null,
                     divElement = null;
@@ -166,27 +171,20 @@
                 divElement.appendChild(mediaElt);
                 webRTCClient.attachMediaStream(mediaElt, stream);
             }
+            /*Suppession d'un élement d'un div*/
             function removeElementFromDiv(divId, eltId) {
                 var element = null,
                     divElement = null;
                 element = document.getElementById(eltId);
                 if (element !== null) {
-                    console.log('Removing video element with Id : ' + eltId);
                     divElement = document.getElementById(divId);
                     divElement.removeChild(element);
                 }
             }
+            /*Suppression d'un média lors d'un événement hangup*/
             function initMediaElementState(callId) {
-                //function that remove media element on hangup
-            //You can decide to manage your own stream display function or use the integrated one of ApiRTC
-            /*
-                removeElementFromDiv('mini', 'miniElt-' + callId)
-                removeElementFromDiv('remote', 'remoteElt-' + callId)
-            */
                 webRTCClient.removeElementFromDiv('mini', 'miniElt-' + callId);
-                webRTCClient.removeElementFromDiv('remote', 'remoteElt-' + callId);
-               // webRTCClient.removeElementFromDiv('audio', 'audioElt-' + callId);
-                
+                webRTCClient.removeElementFromDiv('remote', 'remoteElt-' + callId);        
             }
             function addHangupButton(callId) {
                 var hangupButtons = document.getElementById("hangupButtons"),
@@ -206,12 +204,16 @@
                     hangupButtons.removeChild(hangupButton);
                 }
             }
+            /*Evénement qui se déclanche après établissement de l'appel . 
+            Ici on arrête la sonnerie en local */
             function callEstablishedHandler(e){
                  ion.sound.stop('skype');
             }
             function userMediaErrorHandler(e) {
+                //Réactivation du bouton hangup après erreur 
                 $("#hangup").attr("disabled", false);
             }
+            /*Evénement qui se déclanche lorsque  l'autre pair raccroche l'appel en cours*/
             function hangupHandler(e) {
                 initMediaElementState(e.detail.callId);
                 removeHangupButton(e.detail.callId);
@@ -223,6 +225,7 @@
                 ion.sound.play('hangup');
                  $('#timer').timer('remove');
             }
+            /*Evénement qui se déclanche à la réception d'un appel*/
             function incomingCallHandler(e) {
                 $('#media').dialog('open');
                 addHangupButton(e.detail.callId);
@@ -247,57 +250,42 @@
                  }
             }
              function userMediaSuccessHandler(e) {
-                console.log("userMediaSuccessHandler e.detail.callId :" + e.detail.callId);
-                console.log("userMediaSuccessHandler e.detail.callType :" + e.detail.callType);
-                console.log("userMediaSuccessHandler e.detail.remoteId :" + e.detail.remoteId);
-                //Adding local Stream in Div. Video is muted
-            //You can decide to manage your own stream display function or use the integrated one of ApiRTC
-            /*
-                addStreamInDiv(e.detail.stream, e.detail.callType, "mini", 'miniElt-' + e.detail.callId,
-                               {width : "160px", height : "120px"}, true);
-            */
+                //Ajout de la vidéo local dans un div
+                 //Fonctionnalité supprimée
                 webRTCClient.addStreamInDiv(e.detail.stream, e.detail.callType, "mini", 'miniElt-' + e.detail.callId,
                                {width : "128px", height : "96px"}, true);
             }
             function remoteStreamAddedHandler(e) {
-                console.log("remoteStreamAddedHandler, e.detail.callId :" + e.detail.callId);
-                console.log("remoteStreamAddedHandler, e.detail.callType :" + e.detail.callType);
-                console.log("userMediaSuccessHandler e.detail.remoteId :" + e.detail.remoteId);
-                //Adding Remote Stream in Div. Video is not muted
-            //You can decide to manage your own stream display function or use the integrated one of ApiRTC
-            /*
-                addStreamInDiv(e.detail.stream, e.detail.callType, "remote", 'remoteElt-' + e.detail.callId,
-                               {width : "640px", height : "480px"}, false);
-            */
+                //Ajout de la vidéo distante dans un div.
                     webRTCClient.addStreamInDiv(e.detail.stream, e.detail.callType, "remote", 'remoteElt-' + e.detail.callId,
-                               {width : "640px", height : "480px"}, false);
+                                                {width : "640px", height : "480px"}, false);
             }
-            
-            /*
-            */
-            
             function desktopCaptureHandler(e) {
                     console.log("e.detail.event :" + e.detail.event);
             }
+            /*Focntion d'initialisation du client apiRTC*/
             function sessionReadyHandler(e){
                 apiRTC.addEventListener("updatePresence", receiveInfo);
                 apiRTC.addEventListener("receiveIMMessage", receiveIMMessageHandler);
+                //Suppression de la mini vidéo local
                 //apiRTC.addEventListener("userMediaSuccess", userMediaSuccessHandler);
                 apiRTC.addEventListener("incomingCall", incomingCallHandler);
                 apiRTC.addEventListener("userMediaError", userMediaErrorHandler);
                 apiRTC.addEventListener("hangup", hangupHandler);
                 apiRTC.addEventListener("remoteStreamAdded", remoteStreamAddedHandler);
                 apiRTC.addEventListener("desktopCapture", desktopCaptureHandler);
+                
                 imClient = apiCC.session.createIMClient();
                 webRTCClient = apiRTC.session.createWebRTCClient({});
-                //Multi calls Activation
+                //Activation de call multiples
                 webRTCClient.setAllowMultipleCalls(true);
-                //Bandwitdh limitation
+                //Limitation de la bande passante
                 webRTCClient.setVideoBandwidth(300);
                 //Accept-Refuse
                 webRTCClient.setUserAcceptOnIncomingCall(true);
-                //ScreenSharing Activation
+                //Activation de la focntionnalité de partage d'écran
                 webRTCClient.activateScreenSharing();
+                //Traîtement de l'événement sur click sur le bouton hangup
                 $("#hangup").click(function () {
                     webRTCClient.hangUp();
                     ion.sound.stop("iphone"); 
@@ -307,12 +295,14 @@
                     $('#audio').css({'display': 'none'});
                     jQuery('#media').dialog('close');
                 });
-                    $("#hangupScreenSharing").click(function () {
+                //Traîtement de l'événement sur click sur  le bouton de hangupScreenSharing (arrêt du partage)
+                $("#hangupScreenSharing").click(function () {
                     webRTCClient.hangUp();
                     ion.sound.stop("iphone"); 
                     $('#menuScreenSharing').css({'display' : 'none'});
                     ion.sound.stop("skype");
                 });
+                //Traîtement de l'événement sur click sur le bouton accept
                 $("#accept").click(function () {
                     webRTCClient.acceptCall(incomingCallId);
                     $("#accept").attr("disabled", true);
@@ -348,6 +338,7 @@
                              ion.sound.play('skype');
                          });
                         $('#'+id).contents().find('[id="audio-call"]').click(function(){
+                            $('#media').dialog('open');
                             var callId = webRTCClient.callAudio(id);
                             if (callId != null) {
                                  addHangupButton(callId);
