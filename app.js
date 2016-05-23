@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.router', 'satellizer', 'ngCookies'])
+angular.module('WebrtcApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.router', 'satellizer', 'ngCookies'])
   .config(function($stateProvider, $urlRouterProvider, $authProvider) {
     $stateProvider
       .state('home', {
@@ -26,7 +26,6 @@ angular.module('MyApp', ['ngResource', 'ngMessages', 'ngAnimate', 'toastr', 'ui.
     $authProvider.facebook({
       clientId: '657854390977827'
     });
-
     $authProvider.google({
         url : '/auth/google',
         redirectUri: window.location.origin+'/home' || window.location.protocol + '//' + window.location.host+'/home',

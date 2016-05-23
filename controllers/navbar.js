@@ -1,4 +1,4 @@
-angular.module('MyApp')
+angular.module('WebrtcApp')
   .controller('NavbarCtrl', function($scope, $auth, $http, $cookieStore ) {
     $http.get('/login').success(function(data){
         $cookieStore.put('authentication', data.isAuthenticated);

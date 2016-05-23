@@ -1,4 +1,4 @@
-angular.module('MyApp')
+angular.module('WebrtcApp')
   .controller('HomeCtrl', function($scope, $http) {
     $http.jsonp('https://api.github.com/repos/sahat/satellizer?callback=JSON_CALLBACK')
       .success(function(data) {

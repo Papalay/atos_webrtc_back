@@ -1,4 +1,4 @@
-angular.module('MyApp')
+angular.module('WebrtcApp')
   .controller('LoginCtrl', function($scope, $location, $auth, toastr, $state) {
     $scope.authenticate = function(provider) {
       $auth.authenticate(provider)

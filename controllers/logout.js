@@ -1,4 +1,4 @@
-angular.module('MyApp')
+angular.module('WebrtcApp')
   .controller('LogoutCtrl', function($location, $auth, toastr, $cookieStore, $scope) {
          $cookieStore.put('authentication', false);
          $scope.isAuthenticated = function() {return $cookieStore.get('authentication');}

@@ -132,7 +132,7 @@ app.post('/login', function(req, res) {
             }
         }
 });
-app.get('/auth/login', function(req, res){})
+app.get('/auth/login', function(req, res){});
 
 app.get('/login', function(req, res) { 
      res.send(JSON.stringify({'isAuthenticated' : isAuthenticated}));
@@ -168,37 +168,6 @@ app.put('/api/me', ensureAuthenticated, function(req, res) {
     user.email = req.body.email || user.email;
     user.save(function(err) {
       res.status(200).end();
-    });
-  });
-});
-
-
-/*
- |--------------------------------------------------------------------------
- | Log in with Email
- |--------------------------------------------------------------------------
- */
-
-/*
- |--------------------------------------------------------------------------
- | Create Email and Password Account
- |--------------------------------------------------------------------------
- */
-app.post('/auth/signup', function(req, res) {
-  User.findOne({ email: req.body.email }, function(err, existingUser) {
-    if (existingUser) {
-      return res.status(409).send({ message: 'Email is already taken' });
-    }
-    var user = new User({
-      displayName: req.body.displayName,
-      email: req.body.email,
-      password: req.body.password
-    });
-    user.save(function(err, result) {
-      if (err) {
-        res.status(500).send({ message: err.message });
-      }
-      res.send({ token: createJWT(result) });
     });
   });
 });
