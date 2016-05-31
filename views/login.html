@@ -2,7 +2,7 @@
 <div class="row">
     <div class="center-form panel">
       <div class="panel-body">
-        <form method="post" name="loginForm" action="/login" >
+        <form  ng-submit="auth()" >
           <div class="form-group has-feedback">
             <input class="form-control input-lg"  type="text" name="email" ng-model="identifiants.email" placeholder="Email" required autofocus>
             <span class="ion-at form-control-feedback"></span>

@@ -33,11 +33,11 @@
       <script src="assets/js/jquery-ui-1.10.0.custom.min.js"></script>
  </head>
  <body>
-    <div ng-controller="NavbarCtrl" class="navbar navbar-light navbar-static-top navbar-fixed-top " style="background-color: #e3f2fd;">
-        <ul ng-if="!isAuthenticated()" class="nav navbar-nav pull-right">
+    <div ng-controller="LoginCtrl" class="navbar navbar-light navbar-static-top navbar-fixed-top " style="background-color: #e3f2fd;">
+        <ul ng-if="!isAuthenticated" class="nav navbar-nav pull-right">
             <li><a ui-sref="login">Login</a></li>
         </ul>
-        <ul ng-if="isAuthenticated()" class="nav navbar-nav pull-right">
+        <ul ng-if="isAuthenticated" class="nav navbar-nav pull-right">
             <li><a ui-sref="logout">Logout</a></li>
         </ul>
     </div>

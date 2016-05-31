@@ -126,7 +126,8 @@ app.post('/login', function(req, res) {
             var user = users[i];
             if(user.email == req.body.email && user.password == req.body.password){
                 isAuthenticated =  true;
-                 res.redirect('/#/home');
+                res.send(JSON.stringify({'isAuthenticated' : isAuthenticated}));
+                //res.redirect('/#/home');
             }else{
                 res.redirect('/#/login');
             }

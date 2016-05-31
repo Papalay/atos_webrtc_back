@@ -1,21 +1,17 @@
 angular.module('WebrtcApp')
-  .controller('LoginCtrl', function($scope, $location, $auth, toastr, $state) {
-    $scope.authenticate = function(provider) {
-      $auth.authenticate(provider)
-          .then(function() {
-         toastr.success('You have successfully signed in with ' + provider + '!');
-          //$location.path('/');
-        })
-        .catch(function(error) {
-          if (error.error) {
-            // Popup error - invalid redirect_uri, pressed cancel button, etc.
-            toastr.error(error.error);
-          } else if (error.data) {
-            // HTTP response error from server
-            toastr.error(error.data.message, error.status);
-          } else {
-            toastr.error(error);
-          }
-        });
-    };
+  .controller('LoginCtrl', function($scope, $location, $auth, toastr, $state,$cookieStore, $http,$rootScope) {
+    $scope.identifiants = {};
+    $rootScope.isAuthenticated = false;
+    $scope.auth = function(){
+        $.post("/login", $scope.identifiants).done(function(data){
+            var d = JSON.parse(data);
+             $cookieStore.put('authentication', d.isAuthenticated);
+             $rootScope.isAuthenticated = $cookieStore.get('authentication');
+                if( $scope.isAuthenticated){ 
+                    console.log($scope.isAuthenticated);
+                    $location.path('/home'); 
+                    //toastr.info('You have been login');
+            }
+    })
+    }
 });
